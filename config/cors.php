@@ -19,7 +19,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'http://localhost:5174',
+        'https://kilimo-cha-kisasa-frontend.vercel.app',
+        'https://kilimo-cha-kisasa-frontend-git-main-kilimo-designs-projects.vercel.app',
+        'http://127.0.0.1:5173',
+    ],
 
     'allowed_origins_patterns' => [],
 
@@ -29,15 +36,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
-
-
-    
-    
-    'allowed_origins' => [
-        'http://localhost:5173',
-        'https://kilimo-cha-kisasa-frontend.vercel.app',
-        
-     ],
+    'supports_credentials' => true,
 
 ];

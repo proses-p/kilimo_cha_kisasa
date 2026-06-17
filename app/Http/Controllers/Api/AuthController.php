@@ -12,8 +12,10 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     //
-    // REGISTER LOGIC 
+    // REGISTER LOGIC
     public function register(Request $request) {
+        // DEBUG: log incoming payload to help diagnose missing fields from frontend
+        \Log::debug('Register payload', $request->all());
         // validate incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:100',
@@ -46,6 +48,8 @@ class AuthController extends Controller
 
     // LOGIN LOGIC
     public function login(Request $request) {
+        // DEBUG: log incoming payload to help diagnose missing fields from frontend
+        \Log::debug('Login payload', $request->all());
         // validate
         $validated = $request->validate([
             'email' => 'required|email',
@@ -62,7 +66,7 @@ class AuthController extends Controller
             ]);
         }
 
-        // delete the expired token 
+        // delete the expired token
         $user->tokens()->delete();
 
         // create new tokens
