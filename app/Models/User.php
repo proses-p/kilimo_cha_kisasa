@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'role',
     ];
 
     /**
@@ -48,5 +49,11 @@ class User extends Authenticatable
     // RELATIONSHIPS
     public function farms() {
         return $this->hasMany(Farm::class);
+    }
+
+    // helper
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }

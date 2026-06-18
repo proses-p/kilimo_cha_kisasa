@@ -6,6 +6,11 @@ use App\Http\Controllers\Api\FarmController;
 use App\Http\Controllers\Api\CropController;
 use App\Http\Controllers\Api\CropActivityController;
 use App\Http\Controllers\Api\WeatherController;
+use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Api\Admin\CropController as AdminCropController;
+use App\Http\Controllers\Api\Admin\FarmingTipController as AdminFarmingTipController;
+use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
 
 
 /*
@@ -43,6 +48,23 @@ Route::middleware('auth:sanctum')->group(function() {
     // weather routes
     Route::get('farms/{farm}/weather', [WeatherController::class, 'current']);
     Route::get('farms/{farm}/weather/forecast', [WeatherController::class, 'forecast']);
+
+    // Admin routes - protected by auth and admin middleware
+    Route::prefix('admin')->middleware('admin')->group(function () {
+        Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+
+        // users management
+        Route::apiResource('users', AdminUserController::class)->only(['index','show','update','destroy']);
+
+        // crops
+        Route::apiResource('crops', AdminCropController::class);
+
+        // farming tips
+        Route::apiResource('tips', AdminFarmingTipController::class);
+
+        // announcements
+        Route::apiResource('announcements', AdminAnnouncementController::class);
+    });
 });
 
 
