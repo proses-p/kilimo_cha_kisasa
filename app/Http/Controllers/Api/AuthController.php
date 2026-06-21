@@ -45,7 +45,8 @@ class AuthController extends Controller
             ]
         ], 201);
     }
-
+      
+    /*
     // LOGIN LOGIC
     public function login(Request $request) {
         // DEBUG: log incoming payload to help diagnose missing fields from frontend
@@ -81,6 +82,39 @@ class AuthController extends Controller
             ]
         ]);
     }
+    */
+
+    public function login(Request $request) {
+    \Log::debug('RAW INPUT', $request->getContent());
+
+    $data = json_decode($request->getContent(), true);
+
+    $validated = validator($data, [
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ])->validate();
+
+    $user = User::where('email', $validated['email'])->first();
+
+    if (!$user || !Hash::check($validated['password'], $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['incorrect email or password.'],
+        ]);
+    }
+
+    $user->tokens()->delete();
+
+    $token = $user->createToken('kilimo-cha-kisasa')->plainTextToken;
+
+    return response()->json([
+        'success' => true,
+        'message' => 'login successfull.',
+        'data' => [
+            'user' => $user,
+            'token' => $token,
+        ]
+    ]);
+}
 
     // LOGOUT LOGIC
     public function logout(Request $request) {
