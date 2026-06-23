@@ -35,7 +35,7 @@ class CropActivityController extends Controller
      */
     public function store(Request $request, Crop $crop)
     {
-        if ($crop->farm_id->user_id !== $request->user()->id){
+        if ($crop->farm->user_id !== $request->user()->id){
             return response()->json([
                 'success' => false,
                 'message' => 'Huna ruhusa',
@@ -47,6 +47,10 @@ class CropActivityController extends Controller
             'description' => 'nullable|string',
             'activity_date' => 'required|date',
         ]);
+
+        $validated['scheduled_date'] = $validated['activity_date'];
+        $validated['is_completed'] = false;
+
 
         $activity = $crop->activities()->create($validated);
         return response()->json([

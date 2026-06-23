@@ -1,16 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\FarmController;
-use App\Http\Controllers\Api\CropController;
-use App\Http\Controllers\Api\CropActivityController;
-use App\Http\Controllers\Api\WeatherController;
-use App\Http\Controllers\Api\Admin\DashboardController;
-use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Api\Admin\CropController as AdminCropController;
-use App\Http\Controllers\Api\Admin\FarmingTipController as AdminFarmingTipController;
 use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
+use App\Http\Controllers\Api\Admin\CropController as AdminCropController;
+use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\FarmingTipController as AdminFarmingTipController;
+use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CropActivityController;
+use App\Http\Controllers\Api\CropController;
+use App\Http\Controllers\Api\FarmController;
+use App\Http\Controllers\Api\WeatherController;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -65,6 +66,11 @@ Route::middleware('auth:sanctum')->group(function() {
         // announcements
         Route::apiResource('announcements', AdminAnnouncementController::class);
     });
+});
+
+// routes protected with token to read notifications
+Route::middleware('auth:sanctum')->get('/notifications', function (Request $request) {
+    return response()->json($request->user()->notifications);
 });
 
 
