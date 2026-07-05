@@ -67,11 +67,11 @@ class AuthController extends Controller
             ]);
         }
 
-        // delete the expired token
-        $user->tokens()->delete();
-
-        // create new tokens
-        $token = $user->createToken('kilimo-cha-kisasa')->plainTextToken;
+    if (!$user->is_active) {
+        throw ValidationException::withMessages([
+            'email' => ['Your account is inactive. Contact the administrator.'],
+        ]);
+    }
 
         return response()->json([
             'success' => true,
@@ -112,6 +112,7 @@ class AuthController extends Controller
         'data' => [
             'user' => $user,
             'token' => $token,
+            'role' => strtolower($user->role ?? 'user'),
         ]
     ]);
 }

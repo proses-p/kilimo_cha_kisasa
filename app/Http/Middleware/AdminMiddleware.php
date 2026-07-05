@@ -13,7 +13,9 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
-        if (!$user || $user->role !== 'admin') {
+        $isAdmin = $user && is_string($user->role) && strtolower($user->role) === 'admin';
+
+        if (!$isAdmin) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized. Admins only.'

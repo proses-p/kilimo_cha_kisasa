@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
 use App\Http\Controllers\Api\Admin\CropController as AdminCropController;
 use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\FarmController as AdminFarmController;
 use App\Http\Controllers\Api\Admin\FarmingTipController as AdminFarmingTipController;
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AuthController;
@@ -55,7 +56,10 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
         // users management
-        Route::apiResource('users', AdminUserController::class)->only(['index','show','update','destroy']);
+        Route::apiResource('users', AdminUserController::class)->only(['index','store','show','update','destroy']);
+
+        // farmers / farms management
+        Route::apiResource('farms', AdminFarmController::class);
 
         // crops
         Route::apiResource('crops', AdminCropController::class);

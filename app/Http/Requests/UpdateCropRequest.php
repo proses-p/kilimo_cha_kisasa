@@ -14,11 +14,12 @@ class UpdateCropRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'image' => 'nullable|image|max:2048',
-            'description' => 'nullable|string',
-            'planting_season' => 'nullable|string|max:255',
-            'harvesting_period' => 'nullable|string|max:255',
+            'farm_id' => 'sometimes|required|exists:farms,id',
+            'crop_name' => 'sometimes|required|string|max:100',
+            'planting_date' => 'sometimes|required|date',
+            'harvest_date' => 'nullable|date|after_or_equal:planting_date',
+            'status' => 'sometimes|required|in:planted,growing,harvested,failed',
+            'notes' => 'nullable|string',
         ];
     }
 }
