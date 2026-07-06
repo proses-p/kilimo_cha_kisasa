@@ -11,8 +11,8 @@ class WeatherService {
 
     // dependency injection
     public function __construct() {
-        $this->apiKey = config('services.openweather.key');
-        $this->baseUrl = config('services.openweather.base_url');
+        $this->apiKey = config('services.openweather.key') ?? '';
+        $this->baseUrl = config('services.openweather.base_url') ?? 'https://api.openweathermap.org/data/2.5';
     }
 
     // hali ya hewa ya sas kwa latitude na longtude

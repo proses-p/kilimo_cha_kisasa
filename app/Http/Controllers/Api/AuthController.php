@@ -45,77 +45,43 @@ class AuthController extends Controller
             ]
         ], 201);
     }
-      
-    /*
-    // LOGIN LOGIC
+
     public function login(Request $request) {
-        // DEBUG: log incoming payload to help diagnose missing fields from frontend
         \Log::debug('Login payload', $request->all());
-        // validate
+
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        //check if user exists
         $user = User::where('email', $validated['email'])->first();
 
-        // check if password exists
         if (!$user || !Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['incorrect email or password.'],
+                'email' => ['Incorrect email or password.'],
             ]);
         }
 
-    if (!$user->is_active) {
-        throw ValidationException::withMessages([
-            'email' => ['Your account is inactive. Contact the administrator.'],
-        ]);
-    }
+        if (isset($user->is_active) && $user->is_active === false) {
+            throw ValidationException::withMessages([
+                'email' => ['Your account is inactive. Contact the administrator.'],
+            ]);
+        }
+
+        $user->tokens()->delete();
+
+        $token = $user->createToken('kilimo-cha-kisasa')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'message' => 'login successfull.',
+            'message' => 'login successful.',
             'data' => [
                 'user' => $user,
                 'token' => $token,
+                'role' => strtolower($user->role ?? 'user'),
             ]
         ]);
     }
-    */
-
-    public function login(Request $request) {
-    \Log::debug('RAW INPUT', $request->getContent());
-
-    $data = json_decode($request->getContent(), true);
-
-    $validated = validator($data, [
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ])->validate();
-
-    $user = User::where('email', $validated['email'])->first();
-
-    if (!$user || !Hash::check($validated['password'], $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['incorrect email or password.'],
-        ]);
-    }
-
-    $user->tokens()->delete();
-
-    $token = $user->createToken('kilimo-cha-kisasa')->plainTextToken;
-
-    return response()->json([
-        'success' => true,
-        'message' => 'login successfull.',
-        'data' => [
-            'user' => $user,
-            'token' => $token,
-            'role' => strtolower($user->role ?? 'user'),
-        ]
-    ]);
-}
 
     // LOGOUT LOGIC
     public function logout(Request $request) {
