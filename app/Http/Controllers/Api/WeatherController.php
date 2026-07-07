@@ -35,7 +35,7 @@ class WeatherController extends Controller
         try {
             $weather = $this->weatherService->getCurrentWeather(
                 $farm->latitude,
-                $farm->longtude
+                $farm->longitude
             );
 
             // ongeza ushauri wa kilimo
@@ -47,6 +47,7 @@ class WeatherController extends Controller
                 'data' => $weather,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Weather Error: '.$e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -72,7 +73,7 @@ class WeatherController extends Controller
         try {
             $forecast = $this->weatherService->getForecast(
                 $farm->latitude,
-                $farm->longtude
+                $farm->longitude
             );
 
             return response()->json([

@@ -26,7 +26,7 @@ class WeatherService {
                 'lon' => $lon,
                 'appid' => $this->apiKey,
                 'units' => 'metric', // celcius
-                'lang' => 'sw', 
+                'lang' => 'sw',
             ]);
 
             if ($response->failed()) {
@@ -46,7 +46,7 @@ class WeatherService {
                 'humidity' => $data['main']['humidity'],
                 'wind_speed' => $data['wind']['speed'],
                 'description' => $data['weather'][0]['description'],
-                'icon' => $data['weather'][0]['icon'], 
+                'icon' => $data['weather'][0]['icon'],
                 'icon_url' => "https://openweathermap.org/img/wn/{$data['weather'][0]['icon']}@2x.png",
                 'rain' => $data['rain']['1h'] ?? 0,
                 'recorded_at' => now()->toDateTimeString(),
@@ -59,7 +59,7 @@ class WeatherService {
     }
 
     // utabiri wa siku 5
-    public function getForeCast(float $lat, float $lon): array {
+    public function getForecast(float $lat, float $lon): array {
         $cacheKey = "weather_forecast_{$lat}_{$lon}";
 
         return Cache::remember($cacheKey, now()->addHours(3), function () use ($lat, $lon) {
@@ -78,7 +78,7 @@ class WeatherService {
 
             // panga data vizr
 
-            return collect($data['lists'])->map(function ($item) {
+            return collect($data['list'])->map(function ($item) {
                 return [
                     'datetime' => $item['dt_txt'],
                     'temperature' => round($item['main']['temp']),
