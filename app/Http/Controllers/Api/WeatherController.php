@@ -56,10 +56,10 @@ class WeatherController extends Controller
 
             return response()->json([
                 'success' => true,
-                'weather' => $weather,
+                'data' => $weather,
                 'recommendations' => $recommendations
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Weather Error: '.$e->getMessage());
             return response()->json([
