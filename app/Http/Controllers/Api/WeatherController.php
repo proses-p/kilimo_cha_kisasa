@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Farm;
 use App\Services\WeatherService;
+use App\Services\RecommendationService;
 use Illuminate\Http\Request;
 
 class WeatherController extends Controller
@@ -12,8 +13,9 @@ class WeatherController extends Controller
     //
     private WeatherService $weatherService;
 
-    public function __construct(WeatherService $weatherService) {
+    public function __construct(WeatherService $weatherService, RecommendationService $recommendationService) {
         $this->weatherService = $weatherService;
+        $this->recommendationService = $recommendationService;
     }
 
     public function current(Request $request, Farm $farm) {
@@ -38,6 +40,11 @@ class WeatherController extends Controller
                 $farm->longitude
             );
 
+            $recommendations = $this->recommendationService->generate(
+                $weather,
+                $farm
+            );
+
             // ongeza ushauri wa kilimo
             $weather['farming_advice'] = $this->weatherService->getFarmingAdvice($weather);
 
@@ -46,6 +53,13 @@ class WeatherController extends Controller
                 'farm' => $farm->name,
                 'data' => $weather,
             ]);
+
+            return response()->json([
+                'success' => true,
+                'weather' => $weather,
+                'recommendations' => $recommendations
+            ]);
+            
         } catch (\Exception $e) {
             \Log::error('Weather Error: '.$e->getMessage());
             return response()->json([
