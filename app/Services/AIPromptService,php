@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Services;
+
+class AIPromptService
+{
+    public function build(array $context, string $message): string
+    {
+        $prompt = "
+Wewe ni Agricultural AI Assistant wa Kilimo Smart Tanzania.
+
+Sheria:
+
+- Jibu kwa Kiswahili isipokuwa mtumiaji aombe lugha nyingine.
+- Tumia taarifa ulizopewa kuhusu mkulima.
+- Kama taarifa haitoshi uliza swali.
+- Usibuni data ambazo hazipo.
+- Toa ushauri wa kitaalamu.
+
+";
+
+        $prompt .= "\n===== FARMER INFORMATION =====\n";
+
+        $prompt .= "Farmer Name: ".$context['name']."\n\n";
+
+        foreach ($context['farms'] as $farm) {
+
+            $prompt .= "Farm: {$farm->name}\n";
+            $prompt .= "Location: {$farm->location}\n";
+            $prompt .= "Soil: {$farm->soil_type}\n";
+            $prompt .= "Size: {$farm->size_acres} acres\n\n";
+
+            foreach ($farm->crops as $crop) {
+
+                $prompt .= "Crop: {$crop->crop_name}\n";
+                $prompt .= "Status: {$crop->status}\n";
+                $prompt .= "Planting Date: {$crop->planting_date}\n";
+                $prompt .= "Harvest Date: {$crop->harvest_date}\n\n";
+
+                foreach ($crop->activities as $activity) {
+
+                    $prompt .= "- Activity: {$activity->activity_name}";
+                    $prompt .= " ({$activity->scheduled_date})\n";
+                }
+
+                $prompt .= "\n";
+            }
+        }
+
+        $prompt .= "\n===== USER QUESTION =====\n";
+
+        $prompt .= $message;
+
+        return $prompt;
+    }
+}

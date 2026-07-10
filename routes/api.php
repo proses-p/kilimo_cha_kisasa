@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AIController;
 use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
 use App\Http\Controllers\Api\Admin\CropController as AdminCropController;
 use App\Http\Controllers\Api\Admin\DashboardController;
@@ -11,8 +12,11 @@ use App\Http\Controllers\Api\CropActivityController;
 use App\Http\Controllers\Api\CropController;
 use App\Http\Controllers\Api\FarmController;
 use App\Http\Controllers\Api\WeatherController;
+use App\Services\GeminiService;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -77,4 +81,17 @@ Route::middleware('auth:sanctum')->get('/notifications', function (Request $requ
     return response()->json($request->user()->notifications);
 });
 
+// routes for gemini api ask function
+Route::post('/ask-ai', [AIController::class, 'ask']);
+
+// test AI
+Route::get('/test-ai', function (GeminiService $gemini) {
+    $reply = $gemini->generate(
+        "Jibu kwa sentensi moja tu. Tanzania ina mikoa mingapi?"
+    );
+
+    return response()->json([
+        'reply' => $reply
+    ]);
+});
 

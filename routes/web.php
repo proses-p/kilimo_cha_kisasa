@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\GeminiService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// test models
+Route::get('/gemini-models', function (GeminiService $gemini) {
+    return $gemini->models();
+});
+
 
 

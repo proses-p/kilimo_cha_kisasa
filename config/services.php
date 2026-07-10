@@ -34,6 +34,10 @@ return [
     'openweather' => [
         'key' => env('OPENWEATHER_API_KEY'),
         'base_url' => env('OPENWEATHER_BASE_URL'),
-    ]
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
 
 ];
